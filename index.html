@@ -153,11 +153,15 @@
     color:var(--coral-deep);background:#FFE6E0;padding:3px 14px;border-radius:999px;margin-bottom:10px;
   }
   .timeline-thumb{
-    width:100%;aspect-ratio:16/9;background:#FAF7F2;border:2px dashed rgba(46,36,64,.15);border-radius:16px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);margin-bottom:10px;
+    position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;margin-bottom:10px;
   }
-  .timeline-thumb svg{width:24px;height:24px;}
-  .timeline-thumb span{font-size:11px;font-weight:800;}
+  .timeline-thumb img{width:100%;height:100%;object-fit:cover;display:none;}
+  .timeline-thumb .thumb-fallback{
+    width:100%;height:100%;background:#FAF7F2;border:2px dashed rgba(46,36,64,.15);border-radius:16px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);
+  }
+  .timeline-thumb .thumb-fallback svg{width:24px;height:24px;}
+  .timeline-thumb .thumb-fallback span{font-size:11px;font-weight:800;}
   .timeline-item p{margin:0;font-size:14px;color:var(--muted);font-weight:700;line-height:1.6;}
   @media(max-width:680px){
     .timeline::before{left:18px;}
@@ -170,8 +174,14 @@
   /* ---------- ABOUT ---------- */
   .about{margin-top:20px;background:var(--card);border-radius:32px;padding:40px;display:flex;gap:32px;align-items:center;box-shadow:0 6px 24px rgba(46,36,64,.06);}
   @media(max-width:640px){.about{flex-direction:column;text-align:center;}}
-  .avatar{width:120px;height:120px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--mint),var(--sky));display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:40px;font-weight:700;color:var(--plum);border:4px solid #fff;box-shadow:0 4px 14px rgba(46,36,64,.12);overflow:hidden;}
+  .avatar{width:200px;height:200px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--mint),var(--sky));display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:60px;font-weight:700;color:var(--plum);border:5px solid #fff;box-shadow:0 6px 20px rgba(46,36,64,.15);overflow:hidden;cursor:zoom-in;position:relative;transition:transform .2s ease;}
+  .avatar:hover{transform:scale(1.03);}
   .avatar img{width:100%;height:100%;object-fit:cover;display:none;}
+  .avatar-hint{
+    position:absolute;bottom:8px;right:8px;width:30px;height:30px;border-radius:50%;
+    background:rgba(46,36,64,.55);display:flex;align-items:center;justify-content:center;
+  }
+  .avatar-hint svg{width:15px;height:15px;stroke:#fff;}
   .about h2{font-family:'Baloo 2',cursive;font-size:26px;margin:0 0 6px;}
   .about .since{display:inline-block;font-size:13px;font-weight:800;color:var(--mint-deep);background:var(--mint);padding:4px 12px;border-radius:999px;margin-bottom:12px;}
   .about p{margin:0 0 18px;color:var(--muted);font-weight:700;line-height:1.6;}
@@ -200,6 +210,13 @@
   .contact-row .ic svg{width:20px;height:20px;stroke:var(--coral-deep);}
   .contact-row .txt .lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
   .contact-row .txt .val{font-weight:800;font-size:15px;}
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(20,14,30,.85);align-items:center;justify-content:center;padding:30px;}
+  .lightbox-overlay.open{display:flex;}
+  .lightbox-overlay img{max-width:90vw;max-height:85vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:popIn .25s ease;}
+  .lightbox-close{position:fixed;top:20px;right:24px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:20px;font-weight:800;cursor:pointer;}
+  .lightbox-close:hover{background:rgba(255,255,255,.28);}
 </style>
 </head>
 <body>
@@ -209,9 +226,10 @@
     <a class="nav-logo" href="#" onclick="return false;">Raijin</a>
     <div class="nav-tabs">
       <button class="nav-tab active" data-tab="home">Homepage</button>
+      <button class="nav-tab" data-tab="about">About me</button>
       <button class="nav-tab" data-tab="derby">Derby</button>
       <button class="nav-tab" data-tab="collection">Collection</button>
-      <button class="nav-tab" data-tab="about">About me</button>
+      <button class="nav-tab" data-tab="cosplay">Cosplay</button>
     </div>
     <button class="contact-btn" onclick="openContact()">Contact me</button>
   </div>
@@ -350,32 +368,50 @@
     <div class="timeline">
       <div class="timeline-item left">
         <div class="timeline-year">2021</div>
-        <div class="timeline-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        <div class="timeline-thumb">
+          <img src="assets/journey-2021.jpg" alt="2021" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+          <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        </div>
         <p>Started playing Play Together in February — first island, first pets, first steps into the world.</p>
       </div>
       <div class="timeline-item right">
         <div class="timeline-year">2022</div>
-        <div class="timeline-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        <div class="timeline-thumb">
+          <img src="assets/journey-2022.jpg" alt="2022" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+          <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        </div>
         <p>Grew the pet collection and started exploring the derby and fishing minigames.</p>
       </div>
       <div class="timeline-item left">
         <div class="timeline-year">2023</div>
-        <div class="timeline-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        <div class="timeline-thumb">
+          <img src="assets/journey-2023.jpg" alt="2023" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+          <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        </div>
         <p>Built out my first proper houses and started chasing VIP bears.</p>
       </div>
       <div class="timeline-item right">
         <div class="timeline-year">2024</div>
-        <div class="timeline-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        <div class="timeline-thumb">
+          <img src="assets/journey-2024.jpg" alt="2024" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+          <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        </div>
         <p>Broke into the top ranks of Zombie mode for the first time on the Asia server.</p>
       </div>
       <div class="timeline-item left">
         <div class="timeline-year">2025</div>
-        <div class="timeline-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        <div class="timeline-thumb">
+          <img src="assets/journey-2025.jpg" alt="2025" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+          <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        </div>
         <p>Kept climbing — collection growing, garage filling up, derby wins stacking.</p>
       </div>
       <div class="timeline-item right">
         <div class="timeline-year">2026</div>
-        <div class="timeline-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        <div class="timeline-thumb">
+          <img src="assets/journey-2026.jpg" alt="2026" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
+          <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
+        </div>
         <p>Reached #1 Zombie on the Asia server — currently defending the top spot.</p>
       </div>
     </div>
@@ -441,13 +477,29 @@
   </div>
 </section>
 
+<!-- ============ COSPLAY ============ -->
+<section class="tab-section" id="tab-cosplay">
+  <div class="wrap">
+    <h2 class="section-heading" style="margin-top:56px;">Cosplay</h2>
+    <p class="section-sub">Play Together character cosplay — photos coming soon</p>
+    <div class="gallery-grid">
+      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Cosplay #1</div><div class="meta">Add character + event name</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Cosplay #2</div><div class="meta">Add character + event name</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Cosplay #3</div><div class="meta">Add character + event name</div></div></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ABOUT ============ -->
 <section class="tab-section" id="tab-about">
   <div class="wrap">
     <div class="about" style="margin-top:56px;">
-      <div class="avatar" id="avatarWrap">
+      <div class="avatar" id="avatarWrap" onclick="openLightbox('assets/avatar.png')">
         RJ
-        <img id="avatarImg" src="rajin1.jpg" alt="Raijin avatar">
+        <img id="avatarImg" src="assets/avatar.png" alt="Raijin avatar">
+        <div class="avatar-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        </div>
       </div>
       <div>
         <span class="since">Playing since Feb 2021</span>
@@ -485,7 +537,20 @@
   </div>
 </div>
 
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this) closeLightbox();">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="Zoomed image">
+</div>
+
 <script>
+  function openLightbox(src){
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxOverlay').classList.add('open');
+  }
+  function closeLightbox(){
+    document.getElementById('lightboxOverlay').classList.remove('open');
+  }
+
   document.getElementById('vipBears').dataset.target = 0;
   document.getElementById('totalFishes').dataset.target = 0;
 
@@ -542,7 +607,7 @@
 
   function openContact(){ document.getElementById('contactModal').classList.add('open'); }
   function closeContact(){ document.getElementById('contactModal').classList.remove('open'); }
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeContact(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape'){ closeContact(); closeLightbox(); } });
 </script>
 
 </body>
