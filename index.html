@@ -125,12 +125,22 @@
   .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
   @media(max-width:720px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
   .gallery-card{background:var(--card);border-radius:20px;overflow:hidden;box-shadow:0 6px 18px rgba(46,36,64,.06);}
-  .gallery-thumb{aspect-ratio:4/3;background:#FAF7F2;border-bottom:2px dashed rgba(46,36,64,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);}
+  .gallery-thumb{position:relative;aspect-ratio:4/3;background:#FAF7F2;border-bottom:2px dashed rgba(46,36,64,.12);overflow:hidden;}
+  .gallery-thumb img{width:100%;height:100%;object-fit:contain;display:none;}
+  .gallery-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);}
   .gallery-thumb svg{width:28px;height:28px;}
   .gallery-thumb span{font-size:11px;font-weight:800;}
   .gallery-caption{padding:14px 16px;}
   .gallery-caption .name{font-family:'Baloo 2',cursive;font-weight:700;font-size:15px;}
   .gallery-caption .meta{font-size:13px;color:var(--muted);font-weight:700;}
+
+  /* ---------- ACTIVITIES SUB-TABS ---------- */
+  .sub-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+  .sub-tab{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:var(--muted);background:var(--card);border:none;cursor:pointer;padding:9px 18px;border-radius:999px;transition:all .2s ease;box-shadow:0 3px 10px rgba(46,36,64,.05);}
+  .sub-tab:hover{background:var(--mint);color:var(--mint-deep);}
+  .sub-tab.active{background:var(--coral);color:#fff;}
+  .sub-panel{display:none;}
+  .sub-panel.active{display:block;animation:fadeIn .35s ease;}
 
   /* ---------- TIMELINE ---------- */
   .timeline{position:relative;margin:20px 0 10px;padding:20px 0;}
@@ -207,6 +217,12 @@
   .gh-btn svg{width:18px;height:18px;fill:#fff;}
 
   footer{text-align:center;margin-top:56px;font-size:12px;color:var(--muted);font-weight:700;line-height:1.7;}
+  .footer-social{display:flex;justify-content:center;gap:14px;margin-bottom:16px;}
+  .footer-social a{width:40px;height:40px;border-radius:50%;background:var(--card);box-shadow:0 4px 12px rgba(46,36,64,.08);display:flex;align-items:center;justify-content:center;transition:transform .2s ease, background .2s ease, box-shadow .2s ease;flex-shrink:0;}
+  .footer-social a svg{width:18px;height:18px;fill:var(--plum);}
+  .footer-social a:hover{transform:translateY(-3px);background:var(--coral);box-shadow:0 8px 18px rgba(153,60,29,.25);}
+  .footer-social a:hover svg{fill:#fff;}
+  footer .copyright{margin-top:6px;font-size:11px;letter-spacing:.02em;}
 
   /* ---------- CONTACT MODAL ---------- */
   .modal-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(46,36,64,.45);align-items:center;justify-content:center;padding:20px;}
@@ -241,7 +257,7 @@
       <button class="nav-tab" data-tab="about">About me</button>
       <button class="nav-tab" data-tab="derby">Derby</button>
       <button class="nav-tab" data-tab="collection">Collection</button>
-      <button class="nav-tab" data-tab="cosplay">Cosplay</button>
+      <button class="nav-tab" data-tab="activities">Activities</button>
     </div>
     <button class="contact-btn" onclick="openContact()">Contact me</button>
   </div>
@@ -441,8 +457,14 @@
     </div>
 
     <footer>
+      <div class="footer-social">
+        <a href="https://www.tiktok.com/@raijiin_005" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.02 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg></a>
+        <a href="https://www.instagram.com/raijin.pt/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.22.6 1.77 1.15.55.55.89 1.11 1.15 1.77.24.64.41 1.36.46 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.93 4.93 0 0 1-1.15 1.77 4.93 4.93 0 0 1-1.77 1.15c-.64.24-1.36.41-2.43.46-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.93 4.93 0 0 1-1.77-1.15 4.93 4.93 0 0 1-1.15-1.77c-.24-.64-.41-1.36-.46-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.22 1.15-1.77A4.93 4.93 0 0 1 5.44 2.53c.64-.24 1.36-.41 2.43-.46C8.94 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.31-.42.16-.72.35-1.03.66-.31.31-.5.61-.66 1.03-.13.32-.27.79-.31 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.31 1.66.16.42.35.72.66 1.03.31.31.61.5 1.03.66.32.13.79.27 1.66.31 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.31.42-.16.72-.35 1.03-.66.31-.31.5-.61.66-1.03.13-.32.27-.79.31-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.31-1.66a2.76 2.76 0 0 0-.66-1.03 2.76 2.76 0 0 0-1.03-.66c-.32-.13-.79-.27-1.66-.31C14.99 3.81 14.67 3.8 12 3.8zm0 3.06a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28zm0 1.8a3.34 3.34 0 1 0 0 6.68 3.34 3.34 0 0 0 0-6.68zm5.34-1.99a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+        <a href="https://www.facebook.com/profile.php?id=100089546732261" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.33-.04-1.5-.14-2.73-.14C11.29 2 9.5 3.66 9.5 6.7v2.8H7v4h2.5V22h4v-8.5z"/></svg></a>
+      </div>
       Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.<br>
       Edit the numbers, images, and timeline text in this file to keep it up to date.
+      <div class="copyright">© 2026 Raijin. All rights reserved.</div>
     </footer>
 
   </div>
@@ -454,9 +476,9 @@
     <h2 class="section-heading" style="margin-top:56px;">Derby</h2>
     <p class="section-sub">My derby wins and best runs — screenshots coming soon</p>
     <div class="gallery-grid">
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Derby run #1</div><div class="meta">Add placement + horse name</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Derby run #2</div><div class="meta">Add placement + horse name</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Derby run #3</div><div class="meta">Add placement + horse name</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="derby-run-1.jpg" alt="Derby run #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Derby run #1</div><div class="meta">Add placement + horse name</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="derby-run-2.jpg" alt="Derby run #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Derby run #2</div><div class="meta">Add placement + horse name</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="derby-run-3.jpg" alt="Derby run #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Derby run #3</div><div class="meta">Add placement + horse name</div></div></div>
     </div>
   </div>
 </section>
@@ -470,46 +492,62 @@
     <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--coral-deep);"></span>Pets</h3>
     <p class="subsection-sub">956 total, 167 combined — screenshots coming soon</p>
     <div class="gallery-grid">
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Pet #1</div><div class="meta">Add name + rarity</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Pet #2</div><div class="meta">Add name + rarity</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Pet #3</div><div class="meta">Add name + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="pet-1.jpg" alt="Pet #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Pet #1</div><div class="meta">Add name + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="pet-2.jpg" alt="Pet #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Pet #2</div><div class="meta">Add name + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="pet-3.jpg" alt="Pet #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Pet #3</div><div class="meta">Add name + rarity</div></div></div>
     </div>
 
     <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--sun-deep);"></span>Fishes</h3>
     <p class="subsection-sub">Screenshots coming soon</p>
     <div class="gallery-grid">
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Fish #1</div><div class="meta">Add species + rarity</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Fish #2</div><div class="meta">Add species + rarity</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Fish #3</div><div class="meta">Add species + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="fish-1.jpg" alt="Fish #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Fish #1</div><div class="meta">Add species + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="fish-2.jpg" alt="Fish #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Fish #2</div><div class="meta">Add species + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="fish-3.jpg" alt="Fish #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Fish #3</div><div class="meta">Add species + rarity</div></div></div>
     </div>
 
     <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--sky-deep);"></span>Cars</h3>
     <p class="subsection-sub">Garage lineup — screenshots coming soon</p>
     <div class="gallery-grid">
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Car #1</div><div class="meta">Add model + rarity</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Car #2</div><div class="meta">Add model + rarity</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Car #3</div><div class="meta">Add model + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="car-1.jpg" alt="Car #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Car #1</div><div class="meta">Add model + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="car-2.jpg" alt="Car #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Car #2</div><div class="meta">Add model + rarity</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="car-3.jpg" alt="Car #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Car #3</div><div class="meta">Add model + rarity</div></div></div>
     </div>
 
     <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--lilac-deep);"></span>VIP bears</h3>
     <p class="subsection-sub">Screenshots coming soon</p>
     <div class="gallery-grid">
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">VIP bear #1</div><div class="meta">Add name + edition</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">VIP bear #2</div><div class="meta">Add name + edition</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">VIP bear #3</div><div class="meta">Add name + edition</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="vip-bear-1.jpg" alt="VIP bear #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">VIP bear #1</div><div class="meta">Add name + edition</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="vip-bear-2.jpg" alt="VIP bear #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">VIP bear #2</div><div class="meta">Add name + edition</div></div></div>
+      <div class="gallery-card"><div class="gallery-thumb"><img src="vip-bear-3.jpg" alt="VIP bear #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">VIP bear #3</div><div class="meta">Add name + edition</div></div></div>
     </div>
   </div>
 </section>
 
-<!-- ============ COSPLAY ============ -->
-<section class="tab-section" id="tab-cosplay">
+<!-- ============ ACTIVITIES ============ -->
+<section class="tab-section" id="tab-activities">
   <div class="wrap">
-    <h2 class="section-heading" style="margin-top:56px;">Cosplay</h2>
-    <p class="section-sub">Play Together character cosplay — photos coming soon</p>
-    <div class="gallery-grid">
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Cosplay #1</div><div class="meta">Add character + event name</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Cosplay #2</div><div class="meta">Add character + event name</div></div></div>
-      <div class="gallery-card"><div class="gallery-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div><div class="gallery-caption"><div class="name">Cosplay #3</div><div class="meta">Add character + event name</div></div></div>
+    <h2 class="section-heading" style="margin-top:56px;">Activities</h2>
+    <p class="section-sub">Drawing and cosplay — the creative side of things</p>
+
+    <div class="sub-tabs">
+      <button class="sub-tab active" data-subtab="drawing">Drawing</button>
+      <button class="sub-tab" data-subtab="cosplay">Cosplay</button>
+    </div>
+
+    <div class="sub-panel active" id="subtab-drawing">
+      <div class="gallery-grid">
+        <div class="gallery-card"><div class="gallery-thumb"><img src="drawing-1.jpg" alt="Drawing #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Drawing #1</div><div class="meta">Add title + date</div></div></div>
+        <div class="gallery-card"><div class="gallery-thumb"><img src="drawing-2.jpg" alt="Drawing #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Drawing #2</div><div class="meta">Add title + date</div></div></div>
+        <div class="gallery-card"><div class="gallery-thumb"><img src="drawing-3.jpg" alt="Drawing #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Drawing #3</div><div class="meta">Add title + date</div></div></div>
+      </div>
+    </div>
+
+    <div class="sub-panel" id="subtab-cosplay">
+      <div class="gallery-grid">
+        <div class="gallery-card"><div class="gallery-thumb"><img src="cosplay-1.jpg" alt="Cosplay #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Cosplay #1</div><div class="meta">Add character + event name</div></div></div>
+        <div class="gallery-card"><div class="gallery-thumb"><img src="cosplay-2.jpg" alt="Cosplay #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Cosplay #2</div><div class="meta">Add character + event name</div></div></div>
+        <div class="gallery-card"><div class="gallery-thumb"><img src="cosplay-3.jpg" alt="Cosplay #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Cosplay #3</div><div class="meta">Add character + event name</div></div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -539,7 +577,13 @@
       </div>
     </div>
     <footer>
+      <div class="footer-social">
+        <a href="https://www.tiktok.com/@raijiin_005" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.02 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg></a>
+        <a href="https://www.instagram.com/raijin.pt/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.22.6 1.77 1.15.55.55.89 1.11 1.15 1.77.24.64.41 1.36.46 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.93 4.93 0 0 1-1.15 1.77 4.93 4.93 0 0 1-1.77 1.15c-.64.24-1.36.41-2.43.46-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.93 4.93 0 0 1-1.77-1.15 4.93 4.93 0 0 1-1.15-1.77c-.24-.64-.41-1.36-.46-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.22 1.15-1.77A4.93 4.93 0 0 1 5.44 2.53c.64-.24 1.36-.41 2.43-.46C8.94 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.31-.42.16-.72.35-1.03.66-.31.31-.5.61-.66 1.03-.13.32-.27.79-.31 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.31 1.66.16.42.35.72.66 1.03.31.31.61.5 1.03.66.32.13.79.27 1.66.31 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.31.42-.16.72-.35 1.03-.66.31-.31.5-.61.66-1.03.13-.32.27-.79.31-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.31-1.66a2.76 2.76 0 0 0-.66-1.03 2.76 2.76 0 0 0-1.03-.66c-.32-.13-.79-.27-1.66-.31C14.99 3.81 14.67 3.8 12 3.8zm0 3.06a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28zm0 1.8a3.34 3.34 0 1 0 0 6.68 3.34 3.34 0 0 0 0-6.68zm5.34-1.99a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+        <a href="https://www.facebook.com/profile.php?id=100089546732261" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.33-.04-1.5-.14-2.73-.14C11.29 2 9.5 3.66 9.5 6.7v2.8H7v4h2.5V22h4v-8.5z"/></svg></a>
+      </div>
       Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.
+      <div class="copyright">© 2026 Raijin. All rights reserved.</div>
     </footer>
   </div>
 </section>
@@ -550,13 +594,25 @@
     <button class="modal-close" onclick="closeContact()">✕</button>
     <h3>Get in touch</h3>
     <p class="sub">Reach me through either of these</p>
-    <a class="contact-row" href="mailto:youremail@gmail.com">
+    <a class="contact-row" href="mailto:jeffewing.imperial@gmail.com">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
-      <div class="txt"><div class="lbl">Gmail</div><div class="val">youremail@gmail.com</div></div>
+      <div class="txt"><div class="lbl">Gmail</div><div class="val">jeffewing.imperial@gmail.com</div></div>
     </a>
-    <a class="contact-row" href="tel:+639000000000">
+    <a class="contact-row" href="tel:+639667227598">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.8 2.2z"/></svg></div>
-      <div class="txt"><div class="lbl">Phone</div><div class="val">+63 900 000 0000</div></div>
+      <div class="txt"><div class="lbl">Phone</div><div class="val">0966-722-7598</div></div>
+    </a>
+    <a class="contact-row" href="https://www.tiktok.com/@raijiin_005" target="_blank" rel="noopener">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none;"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.02 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z" style="fill:var(--coral-deep);"/></svg></div>
+      <div class="txt"><div class="lbl">TikTok</div><div class="val">@raijiin_005</div></div>
+    </a>
+    <a class="contact-row" href="https://www.instagram.com/raijin.pt/" target="_blank" rel="noopener">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none;"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.22.6 1.77 1.15.55.55.89 1.11 1.15 1.77.24.64.41 1.36.46 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.93 4.93 0 0 1-1.15 1.77 4.93 4.93 0 0 1-1.77 1.15c-.64.24-1.36.41-2.43.46-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.93 4.93 0 0 1-1.77-1.15 4.93 4.93 0 0 1-1.15-1.77c-.24-.64-.41-1.36-.46-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.22 1.15-1.77A4.93 4.93 0 0 1 5.44 2.53c.64-.24 1.36-.41 2.43-.46C8.94 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.31-.42.16-.72.35-1.03.66-.31.31-.5.61-.66 1.03-.13.32-.27.79-.31 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.31 1.66.16.42.35.72.66 1.03.31.31.61.5 1.03.66.32.13.79.27 1.66.31 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.31.42-.16.72-.35 1.03-.66.31-.31.5-.61.66-1.03.13-.32.27-.79.31-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.31-1.66a2.76 2.76 0 0 0-.66-1.03 2.76 2.76 0 0 0-1.03-.66c-.32-.13-.79-.27-1.66-.31C14.99 3.81 14.67 3.8 12 3.8zm0 3.06a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28zm0 1.8a3.34 3.34 0 1 0 0 6.68 3.34 3.34 0 0 0 0-6.68zm5.34-1.99a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z" style="fill:var(--coral-deep);"/></svg></div>
+      <div class="txt"><div class="lbl">Instagram</div><div class="val">@raijin.pt</div></div>
+    </a>
+    <a class="contact-row" href="https://www.facebook.com/profile.php?id=100089546732261" target="_blank" rel="noopener">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="currentColor" style="stroke:none;"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.33-.04-1.5-.14-2.73-.14C11.29 2 9.5 3.66 9.5 6.7v2.8H7v4h2.5V22h4v-8.5z" style="fill:var(--coral-deep);"/></svg></div>
+      <div class="txt"><div class="lbl">Facebook</div><div class="val">Raijin</div></div>
     </a>
   </div>
 </div>
@@ -632,6 +688,17 @@
   function openContact(){ document.getElementById('contactModal').classList.add('open'); }
   function closeContact(){ document.getElementById('contactModal').classList.remove('open'); }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape'){ closeContact(); closeLightbox(); } });
+
+  const subTabs = document.querySelectorAll('.sub-tab');
+  const subPanels = document.querySelectorAll('.sub-panel');
+  subTabs.forEach(st => {
+    st.addEventListener('click', () => {
+      subTabs.forEach(t => t.classList.remove('active'));
+      subPanels.forEach(p => p.classList.remove('active'));
+      st.classList.add('active');
+      document.getElementById('subtab-' + st.dataset.subtab).classList.add('active');
+    });
+  });
 </script>
 
 </body>
