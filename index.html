@@ -73,6 +73,12 @@
   .contact-btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;background:var(--coral);color:#fff;border:none;cursor:pointer;padding:9px 18px;border-radius:999px;flex-shrink:0;transition:transform .2s ease;}
   .contact-btn:hover{transform:translateY(-2px);}
 
+  /* ---------- LANGUAGE SWITCHER ---------- */
+  .lang-switch{display:flex;align-items:center;gap:2px;background:var(--mint);border-radius:999px;padding:3px;flex-shrink:0;}
+  .lang-btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;letter-spacing:.02em;color:var(--mint-deep);background:none;border:none;cursor:pointer;padding:6px 11px;border-radius:999px;transition:all .2s ease;}
+  .lang-btn:hover{background:rgba(255,255,255,.5);}
+  .lang-btn.active{background:var(--plum);color:#fff;}
+
   .tab-section{display:none;}
   .tab-section.active{display:block;animation:fadeIn .4s ease;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -247,9 +253,12 @@
     background:repeating-linear-gradient(to bottom, var(--lilac) 0 10px, transparent 10px 18px);
     transform:translateX(-50%);
   }
-  .timeline-item{position:relative;width:50%;padding:0 24px 46px;}
-  .timeline-item.left{left:0;text-align:right;}
-  .timeline-item.right{left:50%;text-align:left;}
+  .timeline-item{position:relative;width:50%;padding:0 24px 46px;z-index:2;opacity:0;transition:opacity .7s ease, transform .7s ease;}
+  .timeline-item.left{left:0;text-align:right;transform:translate(-24px,18px);}
+  .timeline-item.right{left:50%;text-align:left;transform:translate(24px,18px);}
+  .timeline-item.in-view{opacity:1;transform:translate(0,0);}
+  .timeline-progress{position:absolute;left:50%;top:0;width:3px;height:0%;background:linear-gradient(180deg,var(--coral),var(--sun));transform:translateX(-50%);border-radius:3px;z-index:1;box-shadow:0 0 10px rgba(255,140,122,.55);transition:height .15s linear;}
+  @media(max-width:680px){.timeline-progress{left:18px;transform:none;}}
   .timeline-item::after{
     content:'';position:absolute;top:6px;width:18px;height:18px;border-radius:50%;
     background:var(--coral);border:4px solid var(--cream);box-shadow:0 0 0 3px var(--coral);
@@ -319,7 +328,7 @@
   .gh-btn:hover{transform:translateY(-2px);background:#443560;}
   .contact-btn-inline{background:var(--coral);color:#fff;}
   .contact-btn-inline:hover{transform:translateY(-2px);}
-  .gh-btn svg{width:18px;height:18px;fill:#fff;}
+  .gh-btn svg{width:18px;height:18px;fill:none;stroke:#fff;}
 
   footer{text-align:center;margin-top:56px;font-size:12px;color:var(--muted);font-weight:700;line-height:1.7;}
   .footer-social{display:flex;justify-content:center;gap:14px;margin-bottom:16px;}
@@ -344,6 +353,17 @@
   .contact-row .txt .lbl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
   .contact-row .txt .val{font-weight:800;font-size:15px;}
 
+  /* ---------- NEWS ---------- */
+  .news-list{display:flex;flex-direction:column;gap:16px;max-width:680px;margin:0 auto;}
+  .news-card{display:flex;gap:18px;background:var(--card);border-radius:22px;padding:20px 22px;box-shadow:0 6px 18px rgba(46,36,64,.06);transition:transform .25s ease,box-shadow .25s ease;}
+  .news-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(46,36,64,.12);}
+  .news-date{flex-shrink:0;width:64px;text-align:center;background:var(--mint);border-radius:14px;padding:8px 4px;color:var(--mint-deep);}
+  .news-date .d-num{display:block;font-family:'Baloo 2',cursive;font-weight:800;font-size:20px;line-height:1;}
+  .news-date .d-mon{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+  .news-body .news-title{font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .news-tag{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:var(--coral);color:#fff;padding:3px 10px;border-radius:999px;}
+  .news-body p{margin:0;font-size:13.5px;color:var(--muted);font-weight:700;line-height:1.6;}
+
   /* ---------- LIGHTBOX ---------- */
   .lightbox-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(20,14,30,.85);align-items:center;justify-content:center;padding:30px;}
   .lightbox-overlay.open{display:flex;}
@@ -358,27 +378,35 @@
   <div class="nav-inner">
     <a class="nav-logo" href="#" onclick="return false;">Raijin</a>
     <div class="nav-tabs">
-      <button class="nav-tab active" data-tab="home">Homepage</button>
-      <button class="nav-tab" data-tab="about">About me</button>
-      <button class="nav-tab" data-tab="derby">Derby</button>
-      <button class="nav-tab" data-tab="collection">Collection</button>
+      <button class="nav-tab active" data-tab="home" data-i18n="nav-home">Homepage</button>
+      <button class="nav-tab" data-tab="about" data-i18n="nav-about">About me</button>
+      <button class="nav-tab" data-tab="news" data-i18n="nav-news">News</button>
+      <button class="nav-tab" data-tab="derby" data-i18n="nav-derby">Derby</button>
+      <button class="nav-tab" data-tab="collection" data-i18n="nav-collection">Collection</button>
       <div class="nav-item-dropdown">
-        <button class="nav-tab" data-tab="activities">Activities</button>
+        <button class="nav-tab" data-tab="activities" data-i18n="nav-activities">Activities</button>
         <div class="dropdown-menu">
           <div class="dropdown-menu-inner">
             <button class="dropdown-link" data-tab="activities" data-subtab="drawing">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-              Drawing
+              <span data-i18n="nav-drawing">Drawing</span>
             </button>
             <button class="dropdown-link" data-tab="activities" data-subtab="cosplay">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
-              Cosplay
+              <span data-i18n="nav-cosplay">Cosplay</span>
             </button>
           </div>
         </div>
       </div>
     </div>
-    <button class="contact-btn" onclick="openContact()">Contact me</button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">VN</button>
+        <button class="lang-btn" data-lang="th" onclick="setLang('th')">TH</button>
+      </div>
+      <button class="contact-btn" onclick="openContact()" data-i18n="nav-contact">Contact me</button>
+    </div>
   </div>
 </div>
 
@@ -390,7 +418,7 @@
     <div class="blob b2"></div>
     <div class="blob b3"></div>
     <div class="blob b4"></div>
-    <span class="eyebrow">Play Together • Player card</span>
+    <span class="eyebrow" data-i18n="hero-eyebrow">Play Together • Player card</span>
     <h1>Raijin</h1>
     <div class="hero-avatar" id="heroAvatarWrap" onclick="openLightbox('rai.jpg')">
       <img id="heroAvatarImg" src="rai.jpg" alt="Raijin" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
@@ -399,7 +427,7 @@
         <span>Add rai.jpg</span>
       </div>
     </div>
-    <p class="tag">Collecting pets on the island since Feb 2021</p>
+    <p class="tag" data-i18n="hero-tag">Collecting pets on the island since Feb 2021</p>
   </div>
 
   <div class="wrap">
@@ -411,22 +439,22 @@
           <path d="M5 18h14" stroke-linecap="round"/>
         </svg>
         <div class="badge-text">
-          <div class="badge-title">#1 Zombie — Asia server</div>
-          <div class="badge-sub">Top ranked</div>
+          <div class="badge-title" data-i18n="badge-title">#1 Zombie — Asia server</div>
+          <div class="badge-sub" data-i18n="badge-sub">Top ranked</div>
         </div>
       </div>
     </div>
 
     <div class="level-bar-section">
       <div class="level-bar-top">
-        <div class="level-badge"><div class="level-circle">26</div>Level 26</div>
-        <div class="level-xp-text">25 / 30 XP to Level 27</div>
+        <div class="level-badge"><div class="level-circle">26</div><span data-i18n="level-label">Level 26</span></div>
+        <div class="level-xp-text"><span data-i18n="level-xp">25 / 30 XP to Level 27</span></div>
       </div>
       <div class="xp-track"><div class="xp-fill" id="xpFill" data-percent="83.33"></div></div>
     </div>
 
-    <h2 class="section-heading">My Play Together stats</h2>
-    <p class="section-sub">Numbers updated every week</p>
+    <h2 class="section-heading" data-i18n="stats-heading">My Play Together stats</h2>
+    <p class="section-sub" data-i18n="stats-sub">Numbers updated every week</p>
 
     <div class="stats-grid">
       <div class="stat-card">
@@ -437,7 +465,7 @@
           </svg>
         </div>
         <div class="stat-number" data-target="167">0</div>
-        <div class="stat-label">Combined pets</div>
+        <div class="stat-label" data-i18n="stat-combined">Combined pets</div>
       </div>
       <div class="stat-card">
         <div class="icon-circle ic-mint">
@@ -446,7 +474,7 @@
           </svg>
         </div>
         <div class="stat-number" data-target="956">0</div>
-        <div class="stat-label">Total pets</div>
+        <div class="stat-label" data-i18n="stat-total-pets">Total pets</div>
       </div>
       <div class="stat-card">
         <div class="icon-circle ic-sky">
@@ -460,7 +488,7 @@
           </svg>
         </div>
         <div class="stat-number" id="vipBears" data-target="94">0</div>
-        <div class="stat-label">VIP bears</div>
+        <div class="stat-label" data-i18n="stat-vip-bears">VIP bears</div>
       </div>
       <div class="stat-card">
         <div class="icon-circle ic-sun">
@@ -470,7 +498,7 @@
           </svg>
         </div>
         <div class="stat-number" id="totalFishes" data-target="961">0</div>
-        <div class="stat-label">Total fishes</div>
+        <div class="stat-label" data-i18n="stat-total-fishes">Total fishes</div>
       </div>
       <div class="stat-card">
         <div class="icon-circle ic-lilac">
@@ -479,7 +507,7 @@
           </svg>
         </div>
         <div class="stat-number" id="yearsPlaying">0</div>
-        <div class="stat-label">Years playing</div>
+        <div class="stat-label" data-i18n="stat-years">Years playing</div>
       </div>
       <div class="stat-card">
         <div class="icon-circle ic-teal">
@@ -491,54 +519,54 @@
           </svg>
         </div>
         <div class="stat-number" id="totalInsects" data-target="421">0</div>
-        <div class="stat-label">Total insects</div>
+        <div class="stat-label" data-i18n="stat-total-insects">Total insects</div>
       </div>
     </div>
 
-    <h2 class="section-heading">My Milestone</h2>
-    <p class="section-sub">The road to #1 — replace each thumbnail with a real screenshot when ready</p>
+    <h2 class="section-heading" data-i18n="milestone-heading">My Milestone</h2>
+    <p class="section-sub" data-i18n="milestone-sub">The road to #1 — replace each thumbnail with a real screenshot when ready</p>
 
     <div class="rank-climb">
       <div class="rank-step">
         <div class="rank-num">1</div>
         <div class="rank-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg></div>
-        <div class="rank-info"><div class="rank-name">Caught My First Blue Whale</div><div class="rank-note">A memorable milestone that marked my biggest fishing achievements.</div></div>
+        <div class="rank-info"><div class="rank-name" data-i18n="rank1-name">Caught My First Blue Whale</div><div class="rank-note" data-i18n="rank1-note">A memorable milestone that marked my biggest fishing achievements.</div></div>
       </div>
       <div class="rank-step">
         <div class="rank-num">2</div>
         <div class="rank-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg></div>
-        <div class="rank-info"><div class="rank-name">Purchased My Dream Car – Rolls-Royce</div><div class="rank-note">Achieved this persnal goal on November 01, 2022</div></div>
+        <div class="rank-info"><div class="rank-name" data-i18n="rank2-name">Purchased My Dream Car – Rolls-Royce</div><div class="rank-note" data-i18n="rank2-note">Achieved this persnal goal on November 01, 2022</div></div>
       </div>
       <div class="rank-step">
         <div class="rank-num">3</div>
         <div class="rank-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg></div>
-        <div class="rank-info"><div class="rank-name">Reached 4,000 Points & Earned the Purple Badge</div><div class="rank-note">Achieved by playing zombie virus frequently to get crowned coins</div></div>
+        <div class="rank-info"><div class="rank-name" data-i18n="rank3-name">Reached 4,000 Points & Earned the Purple Badge</div><div class="rank-note" data-i18n="rank3-note">Achieved by playing zombie virus frequently to get crowned coins</div></div>
       </div>
       <div class="rank-step">
         <div class="rank-num">4</div>
         <div class="rank-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg></div>
-        <div class="rank-info"><div class="rank-name">Reached Level 26 – First Player in Asia</div><div class="rank-note">Completed the newly released Level 26 within 24 hours, becoming the first player in Asia to achieve this milestone.</div></div>
+        <div class="rank-info"><div class="rank-name" data-i18n="rank4-name">Reached Level 26 – First Player in Asia</div><div class="rank-note" data-i18n="rank4-note">Completed the newly released Level 26 within 24 hours, becoming the first player in Asia to achieve this milestone.</div></div>
       </div>
       <div class="rank-step current">
         <div class="rank-num">5</div>
         <div class="rank-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg></div>
-        <div class="rank-info"><div class="rank-name">Defending the #1 Rank in Asia (2021 – Present)</div><div class="rank-note">Maintained the top position in Asia through consistent performance and commitment since 2021.</div></div>
-        <div class="rank-tag">You're here</div>
+        <div class="rank-info"><div class="rank-name" data-i18n="rank5-name">Defending the #1 Rank in Asia (2021 – Present)</div><div class="rank-note" data-i18n="rank5-note">Maintained the top position in Asia through consistent performance and commitment since 2021.</div></div>
+        <div class="rank-tag" data-i18n="rank5-tag">You're here</div>
       </div>
     </div>
 
-    <h2 class="section-heading">4,000 Badge Celebration</h2>
-    <p class="section-sub">Replace the file below with your own celebration clip</p>
+    <h2 class="section-heading" data-i18n="video-heading">4,000 Badge Celebration</h2>
+    <p class="section-sub" data-i18n="video-sub">Replace the file below with your own celebration clip</p>
     <div class="video-card">
-      <video controls preload="metadata" poster="badge-4000-poster.jpg">
+      <video autoplay muted loop playsinline controls preload="auto" poster="badge-4000-poster.jpg">
         <source src="vid.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
-      <div class="video-caption">Hitting 4,000 points & earning the Purple Badge 🏆</div>
+      <div class="video-caption" data-i18n="video-caption">Hitting 4,000 points & earning the Purple Badge 🏆</div>
     </div>
 
-    <h2 class="section-heading">My Derby Plaques</h2>
-    <p class="section-sub">Best derby moment — swap in your screenshot</p>
+    <h2 class="section-heading" data-i18n="derby-home-heading">My Derby Plaques</h2>
+    <p class="section-sub" data-i18n="derby-home-sub">Best derby moment — swap in your screenshot</p>
     <div class="trophy-card">
       <div class="trophy-thumb">
         <img src="derby.PNG" alt="Derby champion moment" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
@@ -548,13 +576,13 @@
         </div>
       </div>
       <div class="trophy-caption">
-        <div class="name">Derby champion moment</div>
-        <div class="meta">Add the placement, date, and horse name here</div>
+        <div class="name" data-i18n="trophy-name">Derby champion moment</div>
+        <div class="meta" data-i18n="trophy-meta">Add the placement, date, and horse name here</div>
       </div>
     </div>
 
-    <h2 class="section-heading">My Zombie Virus journey</h2>
-    <p class="section-sub">A timeline of milestones behind my #1 Zombie Rank in Asia./p>
+    <h2 class="section-heading" data-i18n="zombie-heading">My Zombie Virus journey</h2>
+    <p class="section-sub" data-i18n="zombie-sub">A timeline of milestones behind my #1 Zombie Rank in Asia./p>
 
     <div class="timeline">
       <div class="timeline-item left">
@@ -564,7 +592,7 @@
           <img src="2021.jpg" alt="2021" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
           <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
         </div>
-        <p>Began my Play Together journey and quickly rose to the top, earning the Top1 Zombie Rank - Oct 29, 2021</p>
+        <p data-i18n="tl2021">Began my Play Together journey and quickly rose to the top, earning the Top1 Zombie Rank - Oct 29, 2021</p>
         </div>
       </div>
       <div class="timeline-item right">
@@ -574,7 +602,7 @@
           <img src="2022.PNG" alt="2022" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
           <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
         </div>
-        <p>Closed the year with 19,000 Zombie Wins, strengthening my position as Asia's Top1 player</p>
+        <p data-i18n="tl2022">Closed the year with 19,000 Zombie Wins, strengthening my position as Asia's Top1 player</p>
         </div>
       </div>
       <div class="timeline-item left">
@@ -584,7 +612,7 @@
           <img src="2023.PNG" alt="2023" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
           <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
         </div>
-        <p>Continued dominating the rankings by reaching 26,000 Zombie Wins while defending the #1 spot</p>
+        <p data-i18n="tl2023">Continued dominating the rankings by reaching 26,000 Zombie Wins while defending the #1 spot</p>
         </div>
       </div>
       <div class="timeline-item right">
@@ -594,7 +622,7 @@
           <img src="2024.jpg" alt="2024" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
           <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
         </div>
-        <p>Earned 28,000 Zombie Wins while holding Philippine Flag with the viral song "Piliin Mo ang Pilipinas" trend</p>
+        <p data-i18n="tl2024">Earned 28,000 Zombie Wins while holding Philippine Flag with the viral song "Piliin Mo ang Pilipinas" trend</p>
         </div>
       </div>
       <div class="timeline-item left">
@@ -604,7 +632,7 @@
           <img src="2025.jpg" alt="2025" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
           <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
         </div>
-        <p>Kept climbing until i reached 29,000 Wins before year ends</p>
+        <p data-i18n="tl2025">Kept climbing until i reached 29,000 Wins before year ends</p>
         </div>
       </div>
       <div class="timeline-item right">
@@ -614,7 +642,7 @@
           <img src="2026.jpg" alt="2026" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';">
           <div class="thumb-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div>
         </div>
-        <p>Reached 30,000 Wins Zombie on the Asia server — currently defending the Rank 1 spot. Retirement is near</p>
+        <p data-i18n="tl2026">Reached 30,000 Wins Zombie on the Asia server — currently defending the Rank 1 spot. Retirement is near</p>
         </div>
       </div>
     </div>
@@ -625,9 +653,9 @@
         <a href="https://www.instagram.com/raijin.pt/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.22.6 1.77 1.15.55.55.89 1.11 1.15 1.77.24.64.41 1.36.46 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.93 4.93 0 0 1-1.15 1.77 4.93 4.93 0 0 1-1.77 1.15c-.64.24-1.36.41-2.43.46-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.93 4.93 0 0 1-1.77-1.15 4.93 4.93 0 0 1-1.15-1.77c-.24-.64-.41-1.36-.46-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.22 1.15-1.77A4.93 4.93 0 0 1 5.44 2.53c.64-.24 1.36-.41 2.43-.46C8.94 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.31-.42.16-.72.35-1.03.66-.31.31-.5.61-.66 1.03-.13.32-.27.79-.31 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.31 1.66.16.42.35.72.66 1.03.31.31.61.5 1.03.66.32.13.79.27 1.66.31 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.31.42-.16.72-.35 1.03-.66.31-.31.5-.61.66-1.03.13-.32.27-.79.31-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.31-1.66a2.76 2.76 0 0 0-.66-1.03 2.76 2.76 0 0 0-1.03-.66c-.32-.13-.79-.27-1.66-.31C14.99 3.81 14.67 3.8 12 3.8zm0 3.06a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28zm0 1.8a3.34 3.34 0 1 0 0 6.68 3.34 3.34 0 0 0 0-6.68zm5.34-1.99a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
         <a href="https://www.facebook.com/profile.php?id=100089546732261" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.33-.04-1.5-.14-2.73-.14C11.29 2 9.5 3.66 9.5 6.7v2.8H7v4h2.5V22h4v-8.5z"/></svg></a>
       </div>
-      Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.<br>
-      Edit the numbers, images, and timeline text in this file to keep it up to date.
-      <div class="copyright">© 2026 Raijin. All rights reserved.</div>
+      <span data-i18n="footer-disclaimer">Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.</span><br>
+      <span data-i18n="footer-edit-note">Edit the numbers, images, and timeline text in this file to keep it up to date.</span>
+      <div class="copyright" data-i18n="footer-copyright">© 2026 Raijin. All rights reserved.</div>
     </footer>
 
   </div>
@@ -636,8 +664,8 @@
 <!-- ============ DERBY ============ -->
 <section class="tab-section" id="tab-derby">
   <div class="wrap">
-    <h2 class="section-heading" style="margin-top:56px;">Derby</h2>
-    <p class="section-sub">My derby wins and best runs</p>
+    <h2 class="section-heading" style="margin-top:56px;" data-i18n="derby-heading">Derby</h2>
+    <p class="section-sub" data-i18n="derby-sub">My derby wins and best runs</p>
     <div class="gallery-grid">
       <div class="gallery-card"><div class="gallery-thumb"><img src="der1.jpg" alt="Derby run #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Derby run #1</div><div class="meta">Add placement + horse name</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="der6.PNG" alt="Derby run #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-4-4 3-3-2-6 5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Derby run #2</div><div class="meta">Add placement + horse name</div></div></div>
@@ -650,35 +678,35 @@
 <!-- ============ COLLECTION ============ -->
 <section class="tab-section" id="tab-collection">
   <div class="wrap">
-    <h2 class="section-heading" style="margin-top:56px;">Collection</h2>
-    <p class="section-sub">Everything I've collected on the KAIA island so far</p>
+    <h2 class="section-heading" style="margin-top:56px;" data-i18n="collection-heading">Collection</h2>
+    <p class="section-sub" data-i18n="collection-sub">Everything I've collected on the KAIA island so far</p>
 
-    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--coral-deep);"></span>Pets</h3>
-    <p class="subsection-sub">956 total, 167 combined — screenshots coming soon</p>
+    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--coral-deep);"></span><span data-i18n="pets-heading">Pets</span></h3>
+    <p class="subsection-sub" data-i18n="pets-sub">956 total, 167 combined — screenshots coming soon</p>
     <div class="gallery-grid">
       <div class="gallery-card"><div class="gallery-thumb"><img src="pet-1.jpg" alt="Pet #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Pet #1</div><div class="meta">Add name + rarity</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="pet-2.jpg" alt="Pet #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Pet #2</div><div class="meta">Add name + rarity</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="pet-3.jpg" alt="Pet #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.7 2.6 5 6.3 5c2 0 3.4 1.1 4.2 2.3.3.4.9.4 1.2 0C12.5 6.1 13.9 5 15.9 5c3.7 0 5.6 3.7 3.8 7.5C17.1 16.65 12 21 12 21z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Pet #3</div><div class="meta">Add name + rarity</div></div></div>
     </div>
 
-    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--sun-deep);"></span>Fishes</h3>
-    <p class="subsection-sub">Screenshots coming soon</p>
+    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--sun-deep);"></span><span data-i18n="fishes-heading">Fishes</span></h3>
+    <p class="subsection-sub" data-i18n="fishes-sub">Screenshots coming soon</p>
     <div class="gallery-grid">
       <div class="gallery-card"><div class="gallery-thumb"><img src="fish.jpg" alt="Fish #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Fish #1</div><div class="meta">Add species + rarity</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="bluewhale.jpg" alt="Fish #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Fish #2</div><div class="meta">Add species + rarity</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="fish-3.jpg" alt="Fish #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12c3-4 7-6 11-6 2 0 4 .8 5.5 2L21 6v6l-1.5 2c-1.5 1.2-3.5 2-5.5 2-4 0-8-2-11-6z"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Fish #3</div><div class="meta">Add species + rarity</div></div></div>
     </div>
 
-    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--sky-deep);"></span>Cars</h3>
-    <p class="subsection-sub">Garage lineup — screenshots coming soon</p>
+    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--sky-deep);"></span><span data-i18n="cars-heading">Cars</span></h3>
+    <p class="subsection-sub" data-i18n="cars-sub">Garage lineup — screenshots coming soon</p>
     <div class="gallery-grid">
       <div class="gallery-card"><div class="gallery-thumb"><img src="car-1.jpg" alt="Car #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Car #1</div><div class="meta">Add model + rarity</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="car-2.jpg" alt="Car #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Car #2</div><div class="meta">Add model + rarity</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="car-3.jpg" alt="Car #3" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 13l2-6h14l2 6"/><rect x="2" y="13" width="20" height="6" rx="2"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">Car #3</div><div class="meta">Add model + rarity</div></div></div>
     </div>
 
-    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--lilac-deep);"></span>VIP bears</h3>
-    <p class="subsection-sub">Screenshots coming soon</p>
+    <h3 class="subsection-heading"><span class="dot-tag" style="background:var(--lilac-deep);"></span><span data-i18n="vip-heading">VIP bears</span></h3>
+    <p class="subsection-sub" data-i18n="vip-sub">Screenshots coming soon</p>
     <div class="gallery-grid">
       <div class="gallery-card"><div class="gallery-thumb"><img src="vip-bear-1.jpg" alt="VIP bear #1" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">VIP bear #1</div><div class="meta">Add name + edition</div></div></div>
       <div class="gallery-card"><div class="gallery-thumb"><img src="vip-bear-2.jpg" alt="VIP bear #2" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" onerror="this.style.display='none';"><div class="gallery-fallback"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg><span>Image coming soon</span></div></div><div class="gallery-caption"><div class="name">VIP bear #2</div><div class="meta">Add name + edition</div></div></div>
@@ -690,12 +718,12 @@
 <!-- ============ ACTIVITIES ============ -->
 <section class="tab-section" id="tab-activities">
   <div class="wrap">
-    <h2 class="section-heading" style="margin-top:56px;">Activities</h2>
-    <p class="section-sub">Drawing and cosplay — the creative side of things</p>
+    <h2 class="section-heading" style="margin-top:56px;" data-i18n="activities-heading">Activities</h2>
+    <p class="section-sub" data-i18n="activities-sub">Drawing and cosplay — the creative side of things</p>
 
     <div class="sub-tabs">
-      <button class="sub-tab active" data-subtab="drawing">Drawing</button>
-      <button class="sub-tab" data-subtab="cosplay">Cosplay</button>
+      <button class="sub-tab active" data-subtab="drawing" data-i18n="nav-drawing">Drawing</button>
+      <button class="sub-tab" data-subtab="cosplay" data-i18n="nav-cosplay">Cosplay</button>
     </div>
 
     <div class="sub-panel active" id="subtab-drawing">
@@ -727,6 +755,38 @@
   </div>
 </section>
 
+<!-- ============ NEWS ============ -->
+<section class="tab-section" id="tab-news">
+  <div class="wrap">
+    <h2 class="section-heading" style="margin-top:56px;" data-i18n="news-heading">News & Updates</h2>
+    <p class="section-sub" data-i18n="news-sub">The latest from my island — edit these anytime</p>
+
+    <div class="news-list">
+      <div class="news-card">
+        <div class="news-date"><span class="d-num">01</span><span class="d-mon" data-i18n="news1-mon">Jul</span></div>
+        <div class="news-body">
+          <div class="news-title"><span data-i18n="news1-title">Reached 30,000 Zombie Wins</span><span class="news-tag" data-i18n="news-tag-milestone">Milestone</span></div>
+          <p data-i18n="news1-text">Hit a brand new personal record while defending the #1 Zombie rank on the Asia server.</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-date"><span class="d-num">18</span><span class="d-mon" data-i18n="news2-mon">Jun</span></div>
+        <div class="news-body">
+          <div class="news-title"><span data-i18n="news2-title">Page redesigned</span><span class="news-tag" data-i18n="news-tag-update">Update</span></div>
+          <p data-i18n="news2-text">Added a News tab, language switcher, and a smoother timeline so friends can follow along more easily.</p>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="news-date"><span class="d-num">05</span><span class="d-mon" data-i18n="news3-mon">May</span></div>
+        <div class="news-body">
+          <div class="news-title"><span data-i18n="news3-title">New derby run added</span><span class="news-tag" data-i18n="news-tag-derby">Derby</span></div>
+          <p data-i18n="news3-text">Fresh screenshots from the latest derby event — check the Derby tab for the full gallery.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ABOUT ============ -->
 <section class="tab-section" id="tab-about">
   <div class="wrap">
@@ -738,16 +798,16 @@
         </div>
       </div>
       <div>
-        <span class="since">Playing since Feb 2021</span>
-        <span class="status-pill is-active" id="statusPill"><span class="status-dot"></span>Active</span>
-        <h2>Hey, I'm Raijin</h2>
-        <p>Island builder, pet collector, and reigning #1 zombie on the Asia server. This page tracks my Play Together progress — screenshots going up soon.</p>
+        <span class="since" data-i18n="about-since">Playing since Feb 2021</span>
+        <span class="status-pill is-active" id="statusPill"><span class="status-dot"></span><span data-i18n="about-status">Active</span></span>
+        <h2 data-i18n="about-heading">Hey, I'm Raijin</h2>
+        <p data-i18n="about-text">Island builder, pet collector, and reigning #1 zombie on the Asia server. This page tracks my Play Together progress — screenshots going up soon.</p>
         <div class="btn-row">
-          <a class="gh-btn" href="https://github.com/yourusername" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-            View my GitHub
+          <a class="gh-btn" href="https://play.google.com/store/apps/details?id=com.haegin.playtogether" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="fill:none;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            <span data-i18n="about-download-btn">Download Play Together</span>
           </a>
-          <button class="contact-btn-inline" onclick="openContact()">Contact me</button>
+          <button class="contact-btn-inline" onclick="openContact()" data-i18n="nav-contact">Contact me</button>
         </div>
       </div>
     </div>
@@ -757,8 +817,8 @@
         <a href="https://www.instagram.com/raijin.pt/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.07.05 1.79.22 2.43.46.66.26 1.22.6 1.77 1.15.55.55.89 1.11 1.15 1.77.24.64.41 1.36.46 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.07-.22 1.79-.46 2.43a4.93 4.93 0 0 1-1.15 1.77 4.93 4.93 0 0 1-1.77 1.15c-.64.24-1.36.41-2.43.46-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.07-.05-1.79-.22-2.43-.46a4.93 4.93 0 0 1-1.77-1.15 4.93 4.93 0 0 1-1.15-1.77c-.24-.64-.41-1.36-.46-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.07.22-1.79.46-2.43.26-.66.6-1.22 1.15-1.77A4.93 4.93 0 0 1 5.44 2.53c.64-.24 1.36-.41 2.43-.46C8.94 2.01 9.28 2 12 2zm0 1.8c-2.67 0-2.99.01-4.04.06-.87.04-1.34.18-1.66.31-.42.16-.72.35-1.03.66-.31.31-.5.61-.66 1.03-.13.32-.27.79-.31 1.66-.05 1.05-.06 1.37-.06 4.04s.01 2.99.06 4.04c.04.87.18 1.34.31 1.66.16.42.35.72.66 1.03.31.31.61.5 1.03.66.32.13.79.27 1.66.31 1.05.05 1.37.06 4.04.06s2.99-.01 4.04-.06c.87-.04 1.34-.18 1.66-.31.42-.16.72-.35 1.03-.66.31-.31.5-.61.66-1.03.13-.32.27-.79.31-1.66.05-1.05.06-1.37.06-4.04s-.01-2.99-.06-4.04c-.04-.87-.18-1.34-.31-1.66a2.76 2.76 0 0 0-.66-1.03 2.76 2.76 0 0 0-1.03-.66c-.32-.13-.79-.27-1.66-.31C14.99 3.81 14.67 3.8 12 3.8zm0 3.06a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28zm0 1.8a3.34 3.34 0 1 0 0 6.68 3.34 3.34 0 0 0 0-6.68zm5.34-1.99a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
         <a href="https://www.facebook.com/profile.php?id=100089546732261" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.33-.04-1.5-.14-2.73-.14C11.29 2 9.5 3.66 9.5 6.7v2.8H7v4h2.5V22h4v-8.5z"/></svg></a>
       </div>
-      Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.
-      <div class="copyright">© 2026 Raijin. All rights reserved.</div>
+      <span data-i18n="footer-disclaimer">Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.</span>
+      <div class="copyright" data-i18n="footer-copyright">© 2026 Raijin. All rights reserved.</div>
     </footer>
   </div>
 </section>
@@ -804,6 +864,143 @@
   }
   function closeLightbox(){
     document.getElementById('lightboxOverlay').classList.remove('open');
+  }
+
+  /* ---------- TRANSLATIONS (EN / VN / TH) ---------- */
+  const translations = {
+    en: {
+      'nav-home':'Homepage','nav-about':'About me','nav-news':'News','nav-derby':'Derby','nav-collection':'Collection','nav-activities':'Activities','nav-drawing':'Drawing','nav-cosplay':'Cosplay','nav-contact':'Contact me',
+      'hero-eyebrow':'Play Together • Player card','hero-tag':'Collecting pets on the island since Feb 2021',
+      'badge-title':'#1 Zombie — Asia server','badge-sub':'Top ranked',
+      'level-label':'Level 26','level-xp':'25 / 30 XP to Level 27',
+      'stats-heading':'My Play Together stats','stats-sub':'Numbers updated every week',
+      'stat-combined':'Combined pets','stat-total-pets':'Total pets','stat-vip-bears':'VIP bears','stat-total-fishes':'Total fishes','stat-years':'Years playing','stat-total-insects':'Total insects',
+      'milestone-heading':'My Milestone','milestone-sub':'The road to #1 — replace each thumbnail with a real screenshot when ready',
+      'rank1-name':'Caught My First Blue Whale','rank1-note':'A memorable milestone that marked my biggest fishing achievements.',
+      'rank2-name':'Purchased My Dream Car – Rolls-Royce','rank2-note':'Achieved this personal goal on November 01, 2022',
+      'rank3-name':'Reached 4,000 Points & Earned the Purple Badge','rank3-note':'Achieved by playing zombie virus frequently to get crowned coins',
+      'rank4-name':'Reached Level 26 – First Player in Asia','rank4-note':'Completed the newly released Level 26 within 24 hours, becoming the first player in Asia to achieve this milestone.',
+      'rank5-name':'Defending the #1 Rank in Asia (2021 – Present)','rank5-note':'Maintained the top position in Asia through consistent performance and commitment since 2021.','rank5-tag':"You're here",
+      'video-heading':'4,000 Badge Celebration','video-sub':'Replace the file below with your own celebration clip','video-caption':'Hitting 4,000 points & earning the Purple Badge 🏆',
+      'derby-home-heading':'My Derby Plaques','derby-home-sub':'Best derby moment — swap in your screenshot',
+      'trophy-name':'Derby champion moment','trophy-meta':'Add the placement, date, and horse name here',
+      'zombie-heading':'My Zombie Virus journey','zombie-sub':'A timeline of milestones behind my #1 Zombie Rank in Asia.',
+      'tl2021':'Began my Play Together journey and quickly rose to the top, earning the Top1 Zombie Rank - Oct 29, 2021',
+      'tl2022':"Closed the year with 19,000 Zombie Wins, strengthening my position as Asia's Top1 player",
+      'tl2023':'Continued dominating the rankings by reaching 26,000 Zombie Wins while defending the #1 spot',
+      'tl2024':'Earned 28,000 Zombie Wins while holding the Philippine flag during the viral "Piliin Mo ang Pilipinas" trend',
+      'tl2025':'Kept climbing until I reached 29,000 Wins before the year ended',
+      'tl2026':'Reached 30,000 Zombie Wins on the Asia server — currently defending the Rank 1 spot. Retirement is near',
+      'footer-disclaimer':'Fan-made stats page for Play Together by Haegin — not affiliated with or endorsed by Haegin.',
+      'footer-edit-note':'Edit the numbers, images, and timeline text in this file to keep it up to date.','footer-copyright':'© 2026 Raijin. All rights reserved.',
+      'derby-heading':'Derby','derby-sub':'My derby wins and best runs',
+      'collection-heading':'Collection','collection-sub':"Everything I've collected on the KAIA island so far",
+      'pets-heading':'Pets','pets-sub':'956 total, 167 combined — screenshots coming soon',
+      'fishes-heading':'Fishes','fishes-sub':'Screenshots coming soon',
+      'cars-heading':'Cars','cars-sub':'Garage lineup — screenshots coming soon',
+      'vip-heading':'VIP bears','vip-sub':'Screenshots coming soon',
+      'activities-heading':'Activities','activities-sub':'Drawing and cosplay — the creative side of things',
+      'about-since':'Playing since Feb 2021','about-status':'Active','about-heading':"Hey, I'm Raijin",
+      'about-text':'Island builder, pet collector, and reigning #1 zombie on the Asia server. This page tracks my Play Together progress — screenshots going up soon.',
+      'about-download-btn':'Download Play Together',
+      'news-heading':'News & Updates','news-sub':'The latest from my island — edit these anytime',
+      'news1-mon':'Jul','news1-title':'Reached 30,000 Zombie Wins','news1-text':'Hit a brand new personal record while defending the #1 Zombie rank on the Asia server.',
+      'news2-mon':'Jun','news2-title':'Page redesigned','news2-text':'Added a News tab, language switcher, and a smoother timeline so friends can follow along more easily.',
+      'news3-mon':'May','news3-title':'New derby run added','news3-text':'Fresh screenshots from the latest derby event — check the Derby tab for the full gallery.',
+      'news-tag-milestone':'Milestone','news-tag-update':'Update','news-tag-derby':'Derby'
+    },
+    vi: {
+      'nav-home':'Trang chủ','nav-about':'Giới thiệu','nav-news':'Tin tức','nav-derby':'Đua ngựa','nav-collection':'Bộ sưu tập','nav-activities':'Hoạt động','nav-drawing':'Vẽ tranh','nav-cosplay':'Cosplay','nav-contact':'Liên hệ',
+      'hero-eyebrow':'Play Together • Thẻ người chơi','hero-tag':'Sưu tầm thú cưng trên đảo từ tháng 2/2021',
+      'badge-title':'#1 Zombie — Máy chủ Châu Á','badge-sub':'Hạng cao nhất',
+      'level-label':'Cấp 26','level-xp':'25 / 30 XP để lên Cấp 27',
+      'stats-heading':'Thống kê Play Together của tôi','stats-sub':'Số liệu cập nhật mỗi tuần',
+      'stat-combined':'Thú cưng kết hợp','stat-total-pets':'Tổng số thú cưng','stat-vip-bears':'Gấu VIP','stat-total-fishes':'Tổng số cá','stat-years':'Số năm chơi','stat-total-insects':'Tổng số côn trùng',
+      'milestone-heading':'Cột mốc của tôi','milestone-sub':'Con đường lên hạng #1 — thay từng ảnh bằng ảnh chụp màn hình thật khi sẵn sàng',
+      'rank1-name':'Bắt được cá voi xanh đầu tiên','rank1-note':'Một cột mốc đáng nhớ đánh dấu thành tích câu cá lớn nhất của tôi.',
+      'rank2-name':'Mua được chiếc xe mơ ước – Rolls-Royce','rank2-note':'Đạt được mục tiêu cá nhân này vào ngày 01/11/2022',
+      'rank3-name':'Đạt 4.000 điểm & nhận Huy hiệu Tím','rank3-note':'Đạt được nhờ chơi Zombie Virus thường xuyên để kiếm xu vương miện',
+      'rank4-name':'Đạt Cấp 26 – Người chơi đầu tiên tại Châu Á','rank4-note':'Hoàn thành Cấp 26 mới ra mắt trong vòng 24 giờ, trở thành người chơi đầu tiên ở Châu Á đạt được cột mốc này.',
+      'rank5-name':'Bảo vệ hạng #1 tại Châu Á (2021 – Hiện tại)','rank5-note':'Duy trì vị trí dẫn đầu tại Châu Á nhờ phong độ ổn định và sự kiên trì kể từ năm 2021.','rank5-tag':'Bạn đang ở đây',
+      'video-heading':'Kỷ niệm Huy hiệu 4.000','video-sub':'Thay video bên dưới bằng clip ăn mừng của riêng bạn','video-caption':'Đạt 4.000 điểm & nhận Huy hiệu Tím 🏆',
+      'derby-home-heading':'Bảng vàng đua ngựa của tôi','derby-home-sub':'Khoảnh khắc đua ngựa đẹp nhất — thay bằng ảnh chụp màn hình của bạn',
+      'trophy-name':'Khoảnh khắc vô địch đua ngựa','trophy-meta':'Thêm thứ hạng, ngày tháng và tên ngựa tại đây',
+      'zombie-heading':'Hành trình Zombie Virus của tôi','zombie-sub':'Dòng thời gian các cột mốc đằng sau hạng #1 Zombie tại Châu Á của tôi.',
+      'tl2021':'Bắt đầu hành trình Play Together và nhanh chóng vươn lên top, giành hạng Top1 Zombie - 29/10/2021',
+      'tl2022':'Kết thúc năm với 19.000 lượt thắng Zombie, củng cố vị trí Top1 tại Châu Á',
+      'tl2023':'Tiếp tục thống trị bảng xếp hạng khi đạt 26.000 lượt thắng Zombie trong khi bảo vệ vị trí #1',
+      'tl2024':'Đạt 28.000 lượt thắng Zombie khi cầm cờ Philippines theo trào lưu viral "Piliin Mo ang Pilipinas"',
+      'tl2025':'Tiếp tục leo hạng cho đến khi đạt 29.000 lượt thắng trước khi năm kết thúc',
+      'tl2026':'Đạt 30.000 lượt thắng Zombie trên máy chủ Châu Á — hiện đang bảo vệ vị trí Hạng 1. Sắp đến lúc nghỉ hưu',
+      'footer-disclaimer':'Trang thống kê fan-made cho Play Together của Haegin — không liên kết hay được Haegin xác nhận.',
+      'footer-edit-note':'Chỉnh sửa số liệu, hình ảnh và nội dung dòng thời gian trong file này để cập nhật.','footer-copyright':'© 2026 Raijin. Đã đăng ký bản quyền.',
+      'derby-heading':'Đua ngựa','derby-sub':'Các chiến thắng đua ngựa và những lượt chạy hay nhất của tôi',
+      'collection-heading':'Bộ sưu tập','collection-sub':'Mọi thứ tôi đã sưu tầm được trên đảo KAIA cho đến nay',
+      'pets-heading':'Thú cưng','pets-sub':'956 tổng cộng, 167 kết hợp — ảnh chụp màn hình sắp có',
+      'fishes-heading':'Cá','fishes-sub':'Ảnh chụp màn hình sắp có',
+      'cars-heading':'Xe hơi','cars-sub':'Bộ sưu tập garage — ảnh chụp màn hình sắp có',
+      'vip-heading':'Gấu VIP','vip-sub':'Ảnh chụp màn hình sắp có',
+      'activities-heading':'Hoạt động','activities-sub':'Vẽ tranh và cosplay — khía cạnh sáng tạo',
+      'about-since':'Chơi từ tháng 2/2021','about-status':'Đang hoạt động','about-heading':'Xin chào, tôi là Raijin',
+      'about-text':'Người xây đảo, sưu tầm thú cưng, và đang giữ hạng #1 Zombie tại máy chủ Châu Á. Trang này theo dõi tiến trình Play Together của tôi — ảnh chụp màn hình sẽ sớm được cập nhật.',
+      'about-download-btn':'Tải Play Together',
+      'news-heading':'Tin tức & Cập nhật','news-sub':'Những tin mới nhất từ hòn đảo của tôi — chỉnh sửa bất cứ lúc nào',
+      'news1-mon':'Th7','news1-title':'Đạt 30.000 lượt thắng Zombie','news1-text':'Lập kỷ lục cá nhân mới trong khi bảo vệ hạng #1 Zombie tại máy chủ Châu Á.',
+      'news2-mon':'Th6','news2-title':'Trang web được thiết kế lại','news2-text':'Thêm tab Tin tức, bộ chuyển đổi ngôn ngữ và dòng thời gian mượt mà hơn để bạn bè dễ theo dõi hơn.',
+      'news3-mon':'Th5','news3-title':'Thêm lượt đua ngựa mới','news3-text':'Ảnh chụp màn hình mới từ sự kiện đua ngựa gần đây — xem tab Đua ngựa để biết toàn bộ thư viện ảnh.',
+      'news-tag-milestone':'Cột mốc','news-tag-update':'Cập nhật','news-tag-derby':'Đua ngựa'
+    },
+    th: {
+      'nav-home':'หน้าแรก','nav-about':'เกี่ยวกับฉัน','nav-news':'ข่าวสาร','nav-derby':'ดาร์บี้','nav-collection':'คอลเลกชัน','nav-activities':'กิจกรรม','nav-drawing':'วาดภาพ','nav-cosplay':'คอสเพลย์','nav-contact':'ติดต่อฉัน',
+      'hero-eyebrow':'Play Together • การ์ดผู้เล่น','hero-tag':'สะสมสัตว์เลี้ยงบนเกาะตั้งแต่ก.พ. 2021',
+      'badge-title':'#1 ซอมบี้ — เซิร์ฟเวอร์เอเชีย','badge-sub':'อันดับสูงสุด',
+      'level-label':'เลเวล 26','level-xp':'25 / 30 XP สู่เลเวล 27',
+      'stats-heading':'สถิติ Play Together ของฉัน','stats-sub':'อัปเดตตัวเลขทุกสัปดาห์',
+      'stat-combined':'สัตว์เลี้ยงรวมร่าง','stat-total-pets':'สัตว์เลี้ยงทั้งหมด','stat-vip-bears':'หมี VIP','stat-total-fishes':'ปลาทั้งหมด','stat-years':'ปีที่เล่น','stat-total-insects':'แมลงทั้งหมด',
+      'milestone-heading':'เหตุการณ์สำคัญของฉัน','milestone-sub':'เส้นทางสู่อันดับ #1 — แทนที่แต่ละภาพด้วยภาพหน้าจอจริงเมื่อพร้อม',
+      'rank1-name':'จับวาฬสีน้ำเงินตัวแรกได้','rank1-note':'เหตุการณ์สำคัญที่น่าจดจำซึ่งเป็นความสำเร็จด้านการตกปลาที่ยิ่งใหญ่ที่สุดของฉัน',
+      'rank2-name':'ซื้อรถในฝัน – Rolls-Royce','rank2-note':'บรรลุเป้าหมายส่วนตัวนี้เมื่อวันที่ 1 พฤศจิกายน 2022',
+      'rank3-name':'ทำคะแนนถึง 4,000 แต้ม & ได้รับเหรียญตราสีม่วง','rank3-note':'ทำได้จากการเล่นซอมบี้ไวรัสบ่อยๆ เพื่อเก็บเหรียญมงกุฎ',
+      'rank4-name':'ถึงเลเวล 26 – ผู้เล่นคนแรกในเอเชีย','rank4-note':'ผ่านด่านเลเวล 26 ที่เพิ่งเปิดตัวภายใน 24 ชั่วโมง กลายเป็นผู้เล่นคนแรกในเอเชียที่ทำสำเร็จ',
+      'rank5-name':'ป้องกันอันดับ #1 ในเอเชีย (2021 – ปัจจุบัน)','rank5-note':'รักษาตำแหน่งอันดับหนึ่งในเอเชียด้วยผลงานที่สม่ำเสมอและความมุ่งมั่นตั้งแต่ปี 2021','rank5-tag':'คุณอยู่ที่นี่',
+      'video-heading':'ฉลองเหรียญตรา 4,000','video-sub':'แทนที่ไฟล์ด้านล่างด้วยคลิปฉลองของคุณเอง','video-caption':'ทำคะแนนถึง 4,000 แต้ม & ได้รับเหรียญตราสีม่วง 🏆',
+      'derby-home-heading':'เหรียญรางวัลดาร์บี้ของฉัน','derby-home-sub':'ช่วงเวลาดาร์บี้ที่ดีที่สุด — เปลี่ยนเป็นภาพหน้าจอของคุณ',
+      'trophy-name':'ช่วงเวลาแชมป์ดาร์บี้','trophy-meta':'เพิ่มอันดับ วันที่ และชื่อม้าที่นี่',
+      'zombie-heading':'เส้นทางซอมบี้ไวรัสของฉัน','zombie-sub':'ไทม์ไลน์เหตุการณ์สำคัญเบื้องหลังอันดับ #1 ซอมบี้ในเอเชียของฉัน',
+      'tl2021':'เริ่มต้นการเดินทางใน Play Together และไต่อันดับขึ้นสู่จุดสูงสุดอย่างรวดเร็ว คว้าอันดับ Top1 ซอมบี้ - 29 ต.ค. 2021',
+      'tl2022':'ปิดท้ายปีด้วยชัยชนะซอมบี้ 19,000 ครั้ง เสริมความแข็งแกร่งในตำแหน่ง Top1 ของเอเชีย',
+      'tl2023':'ครองอันดับต่อเนื่องด้วยชัยชนะซอมบี้ 26,000 ครั้ง พร้อมรักษาตำแหน่ง #1',
+      'tl2024':'ทำชัยชนะซอมบี้ได้ 28,000 ครั้งขณะถือธงฟิลิปปินส์ในกระแสไวรัล "Piliin Mo ang Pilipinas"',
+      'tl2025':'ไต่อันดับต่อไปจนถึง 29,000 ชัยชนะก่อนสิ้นปี',
+      'tl2026':'ทำชัยชนะซอมบี้ถึง 30,000 ครั้งบนเซิร์ฟเวอร์เอเชีย — ปัจจุบันกำลังป้องกันตำแหน่งอันดับ 1 อยู่ ใกล้ถึงเวลาเกษียณแล้ว',
+      'footer-disclaimer':'เพจสถิติที่แฟนคลับสร้างขึ้นสำหรับ Play Together โดย Haegin — ไม่ได้เกี่ยวข้องหรือได้รับการรับรองจาก Haegin',
+      'footer-edit-note':'แก้ไขตัวเลข รูปภาพ และข้อความไทม์ไลน์ในไฟล์นี้เพื่อให้ทันสมัยอยู่เสมอ','footer-copyright':'© 2026 Raijin สงวนลิขสิทธิ์',
+      'derby-heading':'ดาร์บี้','derby-sub':'ชัยชนะดาร์บี้และการวิ่งที่ดีที่สุดของฉัน',
+      'collection-heading':'คอลเลกชัน','collection-sub':'ทุกอย่างที่ฉันสะสมมาบนเกาะ KAIA จนถึงตอนนี้',
+      'pets-heading':'สัตว์เลี้ยง','pets-sub':'รวม 956 ตัว ผสมพันธุ์แล้ว 167 ตัว — ภาพหน้าจอเร็วๆ นี้',
+      'fishes-heading':'ปลา','fishes-sub':'ภาพหน้าจอเร็วๆ นี้',
+      'cars-heading':'รถยนต์','cars-sub':'คอลเลกชันโรงรถ — ภาพหน้าจอเร็วๆ นี้',
+      'vip-heading':'หมี VIP','vip-sub':'ภาพหน้าจอเร็วๆ นี้',
+      'activities-heading':'กิจกรรม','activities-sub':'วาดภาพและคอสเพลย์ — ด้านความคิดสร้างสรรค์',
+      'about-since':'เล่นตั้งแต่ก.พ. 2021','about-status':'ออนไลน์','about-heading':'สวัสดี ฉันคือ Raijin',
+      'about-text':'นักสร้างเกาะ นักสะสมสัตว์เลี้ยง และแชมป์ซอมบี้อันดับ #1 บนเซิร์ฟเวอร์เอเชีย เพจนี้ติดตามความคืบหน้า Play Together ของฉัน — ภาพหน้าจอกำลังจะมาเร็วๆ นี้',
+      'about-download-btn':'ดาวน์โหลด Play Together',
+      'news-heading':'ข่าวสารและอัปเดต','news-sub':'ข่าวล่าสุดจากเกาะของฉัน — แก้ไขได้ตลอดเวลา',
+      'news1-mon':'ก.ค.','news1-title':'ทำชัยชนะซอมบี้ถึง 30,000 ครั้ง','news1-text':'ทำสถิติส่วนตัวใหม่ขณะป้องกันอันดับ #1 ซอมบี้บนเซิร์ฟเวอร์เอเชีย',
+      'news2-mon':'มิ.ย.','news2-title':'ออกแบบเพจใหม่','news2-text':'เพิ่มแท็บข่าวสาร ตัวสลับภาษา และไทม์ไลน์ที่ลื่นไหลขึ้นเพื่อให้เพื่อนๆ ติดตามได้ง่ายขึ้น',
+      'news3-mon':'พ.ค.','news3-title':'เพิ่มการวิ่งดาร์บี้ใหม่','news3-text':'ภาพหน้าจอใหม่จากอีเวนต์ดาร์บี้ล่าสุด — ดูแท็บดาร์บี้เพื่อชมแกลเลอรีทั้งหมด',
+      'news-tag-milestone':'เหตุการณ์สำคัญ','news-tag-update':'อัปเดต','news-tag-derby':'ดาร์บี้'
+    }
+  };
+
+  function setLang(lang){
+    const dict = translations[lang] || translations.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    document.documentElement.lang = lang;
   }
 
   const start = new Date(2021, 1, 1);
@@ -860,7 +1057,45 @@
     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
     sections.forEach(s => s.classList.toggle('active', s.id === 'tab-' + tabName));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (tabName === 'home') requestAnimationFrame(updateTimelineProgress);
   }
+
+  /* ---------- TIMELINE ANIMATION ---------- */
+  const timelineEl = document.querySelector('.timeline');
+  let timelineProgressEl = null;
+  if (timelineEl){
+    timelineProgressEl = document.createElement('div');
+    timelineProgressEl.className = 'timeline-progress';
+    timelineEl.appendChild(timelineProgressEl);
+
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    const tlObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          tlObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.25 });
+    timelineItems.forEach((item, i) => {
+      item.style.transitionDelay = (i * 0.08) + 's';
+      tlObserver.observe(item);
+    });
+  }
+
+  function updateTimelineProgress(){
+    if (!timelineEl || !timelineProgressEl) return;
+    const rect = timelineEl.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const total = rect.height;
+    if (total <= 0) return;
+    const scrolled = Math.min(Math.max((vh * 0.6) - rect.top, 0), total);
+    const pct = (scrolled / total) * 100;
+    timelineProgressEl.style.height = pct + '%';
+  }
+  window.addEventListener('scroll', updateTimelineProgress, { passive: true });
+  window.addEventListener('resize', updateTimelineProgress);
+  updateTimelineProgress();
 
   function goToSubTab(subName){
     subTabs.forEach(t => t.classList.toggle('active', t.dataset.subtab === subName));
